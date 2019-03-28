@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="admin/module/macros :: head('')"></div>
+<div th:replace="themes/pinghsu/header::header(${article.articleTitle},${article.tagsName})"></div>
+<body class="app sidebar-mini rtl">
+<main class="app-content">
+    <div th:replace="admin/module/macros :: comm"></div>
+    <div th:replace="admin/module/macros :: header"></div>
+    <div th:if="${session.user_session}!=null">
+        <div th:include="admin/module/navbor"></div>
+        <div th:replace="admin/module/macros :: header"></div>
+    </div>
+    <!--<div th:if="${session.user_session}==null">
+        <div th:include="admin/module/navbor"></div>
+        <div th:replace="admin/module/macros :: header"></div>
+    </div>-->
+    <article class="main-content page-page" itemscope="" itemtype="http://schema.org/Article">
+        <div class="post-header">
+            <h1 class="post-title" itemprop="name headline">
+                <a th:href="@{'/post/'+${article.articleUrl}}" th:text="${article.articleTitle}" data-no-instant=""></a>
+            </h1>
+            <div class="post-data">
+                <time itemprop="datePublished"
+                      th:text="'发布于 '+ ${#dates.format(article.articleNewstime,'yyyy/MM/dd HH:mm:ss')}"></time>
+                /
+                <th:block th:utext="${commons.show_categories(article.categorysUrl,article.categorysName)}"/>
+                /
+                <th:block th:text="${article.articleViews == null ? 0 : article.articleViews}+'浏览'"></th:block>
+                <!-- id 将作为查询条件
+        <span th:id="'/post/'+${article.articleUrl}" class="leancloud-visitors">
+            <em class="post-meta-item-text">阅读量 </em>
+                <i class="leancloud-visitors-count"></i>
+        </span> -->
+            </div>
+        </div>
+
+        <div id="post-content" class="post-content" itemprop="articleBody">
+            <p class="post-tags" th:utext="${commons.show_tags(article.tagsUrl,article.tagsName)}"></p>
+            <th:block th:utext="${article.articleContent}"/>
+
+            <div class="comment-container">
+                <div class="comment-wrap">
+                    <form id="commentFrom">
+                        <div class="table-responsive">
+                            <!--   <div th:fragment="article_id(articleId)">
+                                   <input  id="articleId" type="hidden" name="articleId" th:value="${articleId} ">
+                               </div>-->
+                            <input class="form-control comment-input-who" name="commentAuthor" id="commentAuthor"
+                                   type="text"
+                                   placeholder="昵称(必填)">
+
+                            <input class="form-control comment-input-email" name="commentAuthorEmail"
+                                   id="commentAuthorEmail"
+                                   type="text"
+                                   placeholder="邮箱(选填)">
+
+                            <input class="form-control comment-input-website" name="commentAuthorUrl"
+                                   id="commentAuthorUrl"
+                                   type="text"
+                                   placeholder="网址(选填)">
+                            <input class="form-control " name="articleId" id="articleId" th:value="${article.id} "
+                                   type="hidden"
+                                   placeholder="文章ID">
+                            <input class="form-control " name="replyCommentId" id="replyCommentId"
+                                   type="hidden"
+                                   placeholder="回复评论ID">
+                            <div class="form-group">
+                        <textarea class="form-control" id="commentContent" name="commentContent"
+                                  placeholder="赶快评论一个吧"></textarea>
+                            </div>
+                            <div>
+                                <button class="btn btn-sm btn-outline-primary pull-right" onclick="commentSave()"
+                                        type="button">
+                                    提交评论
+                                </button>
+                                <button type="button" class="comment-cancel-reply pull-right" id="comment-cancel-reply"
+                                >取消回复
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div>
+                <span id="comment-info-total" style="font-weight: 600" th:text="${commentList.size}"></span>评论
+            </div>
+            <div class="table-responsive">
+                <div th:each="comment,iterStat : ${commentList.list}">
+                    <!-- <td th:text="${comment.commentContent}"></td>-->
+
+                    <!--  <li th:text="${comment.commentAuthorAvatarMd5}"><span></span></li>-->
+                    <div class="comment-list-one-footer-time" th:text="${comment.commentAuthor}"></div>
+                    <div th:text="${comment.commentContent}"></div>
+                    <div><span class="comment-list-one-footer-time"
+                               th:text="${#dates.format(comment.commentDate,'yyyy/MM/dd HH:mm:ss')}"></span>
+                        <span class="btn btn-sm comment-list-one-footer-reback"
+                              th:onclick="'javascript:reply('+${comment.commentId}+')'">回复</span>
+                    </div>
+                    <div style="margin-left: 25px;" th:each="comm,iterstat:${comment.commentChildLists}">
+                        <div th:text="${comm.commentAuthor}" class="comment-list-one-footer-time"></div>
+                        <div><span th:text="'@'+${comment.commentAuthor}" class="comment-list-one-footer-time"></span>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <span th:text="${comm.commentContent}"></span>
+                        </div>
+                        <div><span class="comment-list-one-footer-time"
+                                   th:text="${#dates.format(comm.commentDate,'yyyy/MM/dd HH:mm:ss')}"></span>
+                            <span class="btn btn-sm comment-list-one-footer-reback"
+                                  th:onclick="'javascript:reply('+${comm.commentId}+')'">回复</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--<div th:replace="admin/module/_native_comment :: article_id(${article.id})"></div>
+            <div th:replace="admin/module/_native_comment"></div>-->
+            <p class="post-info">
+                本站文章除注明转载/出处外，均为本站原创或翻译，转载前请务必署名,转载请标明出处<br/>最后编辑时间为:
+                <th:block th:text="${#dates.format(article.articleUpdatetime,'yyyy/MM/dd HH:mm:ss')}"/>
+            </p>
+        </div>
+    </article>
+    <div th:replace="admin/module/macros :: comment"></div>
+    <div th:replace="themes/pinghsu/footer :: footer"></div>
+</main>
+<!-- 删除确认弹出层 -->
+<div th:replace="admin/module/macros :: remove"></div>
+<div th:replace="admin/module/macros :: comm"></div>
+<div th:replace="admin/module/macros :: bootstrapValidator"></div>
+<script>
+
+    //提交评论
+    function commentSave() {
+        var contentMd = $("#commentContent").val();
+        if (contentMd != "") {
+            var obj = $("#commentFrom").serialize();
+            $.ajax({
+                type: "get",
+                url: "/comment/comment/new/save",
+                data: obj,
+                async: false,
+                dataType: "json",
+                success: function (data) {
+                    if (data.flag == true) {
+                        //这个不管用，我也不知道为啥
+                        //simplemde.clearAutosavedValue();
+                        /* simplemde.toTextArea();
+                         simplemde = null;*/
+                        $.toast({
+                            text: data.msg,
+                            heading: '提示',
+                            icon: 'success',
+                            showHideTransition: 'fade',
+                            allowToastClose: true,
+                            hideAfter: 1000,
+                            stack: 1,
+                            position: 'top-center',
+                            textAlign: 'left',
+                            loader: true,
+                            loaderBg: '#ffffff',
+                            afterHidden: function () {
+                                $("#replyCommentId").val("");
+                                window.location.href = "/post/" + data.data.articleUrl;
+                            }
+                        });
+                    } else {
+                        showMsg(data.msg, "error", "3000");
+                    }
+                }
+            });
+        } else {
+            showMsg("评论内容不能为空！", "error", "3000");
+        }
+    }
+
+    //取消回复
+    $('.comment-cancel-reply').click(function () {
+        $('#commentParent').val(0);
+        $('#commentContent').attr("placeholder", "");
+        // $(".comment-cancel-reply").hide();
+    });
+
+    //回复
+    function reply(commentId) {
+        $("#commentContent").focus();
+        $("#replyCommentId").val(commentId);
+        // $("#")
+    }
+</script>
+</body>
+<style>
+    .comment-input-who, .comment-input-email, .comment-input-website {
+        float: left !important;
+        padding: 10px 0 !important;
+        width: 33.33% !important;
+        border: none !important;
+        border-bottom: 1px dashed #dedede !important;
+        font-size: 16px !important;
+    }
+
+    .comment-list-one-footer-reback {
+        color: #ef2f11 !important;
+        font-size: 14px !important;
+        cursor: pointer !important;
+    }
+
+    .comment-list-one-footer-time {
+        margin-right: 5px !important;
+        color: #b3b3b3 !important;
+        font-size: 12px !important;
+    }
+
+    .comment-submit, .comment-cancel-reply {
+        padding: 7px 14px !important;
+        outline: none !important;
+        border: 1px solid #ededed !important;
+        border-radius: 0 !important;
+        background: #ededed !important;
+        color: #313131 !important;
+        vertical-align: middle !important;
+        font-size: 16px !important;
+        line-height: normal !important;
+        cursor: pointer !important;
+        transition: all .3s ease-in-out !important
+    }
+</style>
+</html>

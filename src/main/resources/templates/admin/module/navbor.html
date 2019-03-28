@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="admin/module/macros :: head('')"></div>
+<!--<body class="app sidebar-mini rtl">-->
+<!--<main class="app-content">-->
+<div th:replace="admin/module/macros :: comm"></div>
+<div th:replace="admin/module/macros :: bootstrapValidator"></div>
+<div th:replace="admin/module/macros :: bootstrapFileinput"></div>
+<div th:replace="admin/module/macros :: header"></div>
+<!--前台侧边栏-->
+<div th:fragment="navbor" id="refushNavbor">
+    <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
+    <aside class="app-sidebar">
+            <div class="app-sidebar__user"><img width="60px" class="app-sidebar__user-avatar"
+                                                th:src="${session.user_session.userPortrait == null ? '/static/img/people.jpg' : session.user_session.userPortrait}"
+                                                alt="User Image">
+                <div>
+                    <p class="app-sidebar__user-name" th:text="${session.user_session.userDisplayName}"></p>
+                </div>
+            </div>
+
+            <ul class="app-menu" id="app-menu">
+            <span id="treeviewMenuId">
+            </span>
+            </ul>
+    </aside>
+</div>
+<!--</main>-->
+<div th:replace="admin/module/macros :: remove"></div>
+<div th:replace="admin/module/macros :: recycle"></div>
+<!--<div th:replace="admin/module/macros :: comm"></div>
+</body>-->
+<script th:inline="javascript" type="text/javascript">
+    $(function () {
+        var obj = null;
+        $.ajax({
+            url: "/navbor/navbor",
+            type: "get",
+            data: obj,
+            dataType: "json",
+            success: function (data) {
+                var html = "";
+                console.log("data:", data);
+                var menusList = data.data.menusList;
+                for (var i = 0; i < menusList.length; i++) {
+                    var menu = menusList[i].menuList;
+                    var title = "";
+                    if (menu != null && menu.length > 0) {
+                        title = "<li class=\"treeview\"><a class=\"app-menu__item\" href=\"#\" data-toggle=\"treeview\"><i class=\"app-menu__icon fa fa-book\"></i><span class=\"app-menu__label\">" + menusList[i].menuName + "</span><i class=\"treeview-indicator fa fa-angle-right\"></i></a>"
+                    } else {
+                        title = "<li><a class=\"app-menu__item\" href=\"#\"><i class=\"app-menu__icon fa fa-file-image-o\"></i><span class=\"app-menu__label\">" + menusList[i].menuName + "</span></a>";
+                    }
+                    /*  archive+="<li ><a class=\"treeview-item\" ><i class=\"icon fa fa-circle-o\"></i>"+archiveBoList[i].date+"</a></li>";*/
+                    html += title;
+                    if (menu != null && menu.length > 0) {
+                        html += "<ul class=\"treeview-menu\">";
+                        for (var j = 0; j < menu.length; j++) {
+                            html += "<li><a class=\"treeview-item\" href=\"" + menu[j].url + "\"><i class=\"icon fa fa-circle-o\"></i>" + menu[j].name + "</a></li>";
+                        }
+                        html += "</ul>";
+                    }
+
+                    html += "</li>";
+                }
+                console.log("html:" + html);
+                $("#treeviewMenuId").append(html);
+
+            }
+        })
+    })
+
+</script>
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<style>
+    .comment-input-who, .comment-input-email, .comment-input-website {
+        float: left !important;
+        padding: 10px 0 !important;
+        width: 33.33% !important;
+        border: none !important;
+        border-bottom: 1px dashed #dedede !important;
+        font-size: 16px !important;
+    }
+</style>
+<div th:replace="admin/module/macros :: head('')"></div>
+<body class="app sidebar-mini rtl">
+<div th:replace="admin/module/macros :: comm"></div>
+<div class="comment-container">
+    <div class="comment-wrap">
+        <form id="commentFrom">
+            <div class="row">
+                <div class="table-responsive">
+                    <div th:fragment="article_id(articleId)">
+                        <input  id="articleId" type="hidden" name="articleId" th:value="${articleId} ">
+                    </div>
+                    <input class="form-control comment-input-who" name="commentAuthor" id="commentAuthor" type="text"
+                           placeholder="昵称(必填)">
+
+                    <input class="form-control comment-input-email" name="commentAuthorEmail" id="commentAuthorEmail"
+                           type="text"
+                           placeholder="邮箱(选填)">
+
+                    <input class="form-control comment-input-website" name="commentAuthorUrl" id="commentAuthorUrl"
+                           type="text"
+                           placeholder="网址(选填)">
+                    <input class="form-control " name="article_id" id="article_id"
+                           type="hidden"
+                           placeholder="文章ID">
+                    <div class="form-group">
+                        <textarea class="form-control" id="commentContent" name="commentContent"
+                                  placeholder="赶快评论一个吧"></textarea>
+                    </div>
+                    <div class="tile-footer">
+                        <button type="button" class="comment-cancel-reply" id="comment-cancel-reply"
+                                style="display: none;">取消回复
+                        </button>
+                        <button class="btn btn-sm btn-outline-primary pull-right" onclick="commentSave()" type="button">
+                            提交评论
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="comment-message" style="text-align: center;padding: 20px;display: none"></div>
+      <div class="comment-info">
+         <span id="comment-info-total" style="font-weight: 600">${commentsCount!0}</span>评论
+     </div>
+    <!--   <#macro childComments comments>
+            <ul class="comment-list" style="margin-left: 30px; border-left: 1px solid #f1f1f1">
+            <#if comments?? && comments?size gt 0>
+                <#list comments?sort_by("commentDate") as comment>
+                    <li class="comment-list-one" id="comment-id-${comment.commentId?c}" style="margin-left: 5px;">
+                        <img class="comment-list-one-img" src="//gravatar.loli.net/avatar/${comment.commentAuthorAvatarMd5!}?s=256&d=${options.native_comment_avatar!'mm'}">
+                        <section>
+                            <div class="comment-list-one-head">
+                                <a class="comment-list-one-head-name" rel="nofollow" href="${comment.commentAuthorUrl!}">${comment.commentAuthor!}</a>
+                                <span class="comment-ua-info" style="display: none">${comment.commentAgent!}</span>
+                                <#if comment.isAdmin==1>
+                                    <span class="comment-list-one-head-admin">博主</span>
+                                </#if>
+                            </div>
+                            <div class="comment-list-one-content">
+                                <p>${comment.commentContent!}</p>
+                            </div>
+                            <div class="comment-list-one-footer">
+                                <span class="comment-list-one-footer-time">${comment.commentDate?string("yyyy-MM-dd HH:mm")}</span>
+                                <span at="${comment.commentId?c}" class="comment-list-one-footer-reback">回复</span>
+                            </div>
+                        </section>
+                        <#if comment.childComments?? && comment.childComments?size gt 0>
+                            <@childComments comment.childComments></@childComments>
+                        </#if>
+                    </li>
+                </#list>
+            </#if>
+            </ul>
+        </#macro>
+        <ul class="comment-list" id="comments-list">
+            <#if comments?? && comments.getPageList()?size gt 0>
+                <#list comments.getPageList()?sort_by("commentDate")?reverse as comment>
+                    <li class="comment-list-one" id="comment-id-${comment.commentId?c}">
+                        <img class="comment-list-one-img" src="//gravatar.loli.net/avatar/${comment.commentAuthorAvatarMd5!}?s=256&d=${options.native_comment_avatar!'mm'}">
+                        <section>
+                            <div class="comment-list-one-head">
+                                <a class="comment-list-one-head-name" rel="nofollow" href="${comment.commentAuthorUrl!}">${comment.commentAuthor!}</a>
+                                <span class="comment-ua-info" style="display: none">${comment.commentAgent!}</span>
+                                <#if comment.isAdmin==1>
+                                    <label class="comment-list-one-head-admin">博主</label>
+                                </#if>
+                            </div>
+                            <div class="comment-list-one-content">
+                                <p>${comment.commentContent!}</p>
+                            </div>
+                            <div class="comment-list-one-footer">
+                                <span class="comment-list-one-footer-time">${comment.commentDate?string("yyyy-MM-dd HH:mm")}</span>
+                                <span at="${comment.commentId?c}" class="comment-list-one-footer-reback">回复</span>
+                            </div>
+                        </section>
+                        <#if comment.childComments?? && comment.childComments?size gt 0>
+                            <@childComments comment.childComments></@childComments>
+                        </#if>
+                    </li>
+                </#list>
+            </#if>
+        </ul>
+        <div class="native-nav" id="comment-nav">
+            <#if comments.totalPage gt 1>
+                <ol class="page-nav">
+                    <#if comments.hasPrevious>
+                    <li>
+                        <a href="?cp=${comments.nowPage-1}#comments-list" title="上一页">←</a>
+                    </li>
+                    </#if>
+                    <li>
+                        <#list rainbow as r>
+                            <#if r == comments.nowPage>
+                                <a href="?cp=${comments.nowPage}#comments-list" style="color: red;">${r}</a>
+                            <#else>
+                                <a href="?cp=${r}#comments-list">${r}</a>
+                            </#if>
+                        </#list>
+                    </li>
+                    <#if comments.hasNext>
+                    <li>
+                        <a href="?cp=${comments.nowPage+1}#comments-list" title="下一页">→</a>
+                    </li>
+                    </#if>
+                </ol>
+            </#if>
+        </div>-->
+</div>
+<script>
+    //提交评论
+    function commentSave() {
+        var contentMd = $("#commentContent").val();
+        if (contentMd != "") {
+            $("#article_id").val($("#articleId").val());
+            var obj = $("#commentFrom").serialize();
+            $.ajax({
+                type: "get",
+                url: "/comment/comment/new/save",
+                data: obj,
+                async: false,
+                dataType: "json",
+                success: function (data) {
+                    if (data.flag == true) {
+                        //这个不管用，我也不知道为啥
+                        //simplemde.clearAutosavedValue();
+                       /* simplemde.toTextArea();
+                        simplemde = null;*/+
+                        $.toast({
+                            text: data.msg,
+                            heading: '提示',
+                            icon: 'success',
+                            showHideTransition: 'fade',
+                            allowToastClose: true,
+                            hideAfter: 1000,
+                            stack: 1,
+                            position: 'top-center',
+                            textAlign: 'left',
+                            loader: true,
+                            loaderBg: '#ffffff',
+                            afterHidden: function () {
+                                window.location.href = "/post/"+data.data.articleUrl;
+                            }
+                        });
+                    } else {
+                        showMsg(data.msg, "error", "3000");
+                    }
+                }
+            });
+        } else {
+            showMsg("评论内容不能为空！", "error", "3000");
+        }
+    }
+    $(function () {
+        
+    })
+</script>
+</body>
+</html>
