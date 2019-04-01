@@ -8,37 +8,47 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+
 @FeignClient(name = "provider")
 public interface UserMapper {
     @RequestMapping(value = "/user/countByExample")
-    long countByExample(UserExample example);
+    long countByExample(@RequestBody(required = false) UserExample example);
+
     @RequestMapping(value = "/user/deleteByExample")
-    int deleteByExample(UserExample example);
+    int deleteByExample(@RequestBody(required = false) UserExample example);
+
     @RequestMapping(value = "/user/deleteByPrimaryKey")
-    int deleteByPrimaryKey(@RequestParam("userId") Integer userId);
+    int deleteByPrimaryKey(@RequestParam(value = "userId", required = false) Integer userId);
+
     @RequestMapping(value = "/user/insert")
-    int insert(User record);
+    int insert(@RequestBody(required = false) User record);
+
     @RequestMapping(value = "/user/insertSelective")
-    int insertSelective(User record);
+    int insertSelective(@RequestBody(required = false) User record);
+
     @RequestMapping(value = "/user/selectByExample")
-    List<User> selectByExample(UserExample example);
+    List<User> selectByExample(@RequestBody(required = false) UserExample example);
+
     @RequestMapping(value = "/user/selectByPrimaryKey")
-    User selectByPrimaryKey(Integer userId);
+    User selectByPrimaryKey(@RequestParam(value = "userId", required = false) Integer userId);
+
     @RequestMapping(value = "/user/updateByExampleSelective")
-    int updateByExampleSelective(@RequestBody User record,  @RequestParam("orderByClause")UserExample example);
+    int updateByExampleSelective(@RequestBody(required = false) User record, @RequestParam(value = "orderByClause", required = false) UserExample example);
+
     @RequestMapping(value = "/user/updateByExample")
-    int updateByExample(@RequestBody User record, @RequestParam("orderByClause")UserExample example);
+    int updateByExample(@RequestBody(required = false) User record, @RequestParam(value = "orderByClause", required = false) UserExample example);
+
     @RequestMapping(value = "/user/updateByPrimaryKeySelective")
-    int updateByPrimaryKeySelective(User record);
+    int updateByPrimaryKeySelective(@RequestBody(required = false) User record);
+
     @RequestMapping(value = "/user/updateByPrimaryKey")
-    int updateByPrimaryKey(User record);
+    int updateByPrimaryKey(@RequestBody(required = false) User record);
+
     /**
      * 根据用户名和密码查询用户
      *
-     * @param name
-     *            用户名
-     * @param pwd
-     *            用户密码
+     * @param name 用户名
+     * @param pwd  用户密码
      * @return 根据用户名和密码获取用户信息
      */
     @RequestMapping(value = "/user/getByNameAndPwd")
@@ -63,10 +73,8 @@ public interface UserMapper {
     /**
      * 查询原密码是否存在
      *
-     * @param userId
-     *            用户id
-     * @param formerlyPwd
-     *            原密码
+     * @param userId      用户id
+     * @param formerlyPwd 原密码
      * @return
      */
     @RequestMapping(value = "/user/findByUserIdAndUserPwd")

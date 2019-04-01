@@ -8,28 +8,39 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+
 @FeignClient(name = "provider")
 public interface MenuMapper {
-	@RequestMapping(value = "/menu/countByExample")
-	long countByExample(MenuExample example);
-	@RequestMapping(value = "/menu/countByExample")
-	int deleteByExample(MenuExample example);
-	@RequestMapping(value = "/menu/deleteByPrimaryKey")
-	int deleteByPrimaryKey(@RequestParam("menuId") Integer menuId);
-	@RequestMapping(value = "/menu/insert")
-	int insert(Menu record);
-	@RequestMapping(value = "/menu/insertSelective")
-	int insertSelective(Menu record);
-	@RequestMapping(value = "/menu/selectByExample")
-	List<Menu> selectByExample(MenuExample example);
-	@RequestMapping(value = "/menu/selectByPrimaryKey")
-	Menu selectByPrimaryKey(Integer menuId);
-	@RequestMapping(value = "/menu/updateByExampleSelective")
-	int updateByExampleSelective(@RequestBody Menu record,@RequestParam("orderByClause") MenuExample example);
-	@RequestMapping(value = "/menu/updateByExample")
-	int updateByExample( @RequestBody Menu record, @RequestParam("orderByClause") MenuExample example);
-	@RequestMapping(value = "/menu/updateByPrimaryKeySelective")
-	int updateByPrimaryKeySelective(Menu record);
-	@RequestMapping(value = "/menu/updateByPrimaryKey")
-	int updateByPrimaryKey(Menu record);
+    @RequestMapping(value = "/menu/countByExample")
+    long countByExample(@RequestBody(required = false) MenuExample example);
+
+    @RequestMapping(value = "/menu/countByExample")
+    int deleteByExample(@RequestBody(required = false) MenuExample example);
+
+    @RequestMapping(value = "/menu/deleteByPrimaryKey")
+    int deleteByPrimaryKey(@RequestParam(value = "menuId", required = false) Integer menuId);
+
+    @RequestMapping(value = "/menu/insert")
+    int insert(@RequestBody(required = false) Menu record);
+
+    @RequestMapping(value = "/menu/insertSelective")
+    int insertSelective(@RequestBody(required = false) Menu record);
+
+    @RequestMapping(value = "/menu/selectByExample")
+    List<Menu> selectByExample(@RequestBody(required = false) MenuExample example);
+
+    @RequestMapping(value = "/menu/selectByPrimaryKey")
+    Menu selectByPrimaryKey(@RequestParam(value = "menuId", required = false) Integer menuId);
+
+    @RequestMapping(value = "/menu/updateByExampleSelective")
+    int updateByExampleSelective(@RequestBody(required = false) Menu record, @RequestParam(value = "orderByClause", required = false) MenuExample example);
+
+    @RequestMapping(value = "/menu/updateByExample")
+    int updateByExample(@RequestBody(required = false) Menu record, @RequestParam(value = "orderByClause", required = false) MenuExample example);
+
+    @RequestMapping(value = "/menu/updateByPrimaryKeySelective")
+    int updateByPrimaryKeySelective(@RequestBody(required = false) Menu record);
+
+    @RequestMapping(value = "/menu/updateByPrimaryKey")
+    int updateByPrimaryKey(@RequestBody(required = false) Menu record);
 }

@@ -40,8 +40,8 @@ public class ArticleServiceImpl implements ArticleService {
 	private ArticleTagMapper articleTagMapper;
 	@Autowired
 	private ArticleCategoryMapper articleCategoryMapper;
-	@Autowired
-	private ArticleMapperCustom articleMapperCustom;
+	/*@Autowired
+	private ArticleMapperCustom articleMapperCustom;*/
 	@Autowired
 	private TagMapperCustom tagMapperCustom;
 	@Autowired
@@ -75,27 +75,27 @@ public class ArticleServiceImpl implements ArticleService {
 	@Override
 	@Cacheable(value = ARTICLES_CACHE_NAME, key = "'findAllArticle'+#status+#post")
 	public List<ArticleCustom> findAllArticle(int status, String post) {
-		return articleMapperCustom.findAllArticle(status,post);
+		return articleMapper.findAllArticle(status,post);
 	}
 
 	@Override
 	@Cacheable(value = ARTICLES_CACHE_NAME, key = "'findPageArticle'+#page+#limit+#articleCustom.articleStatus+#articleCustom.articlePost")
 	public PageInfo<ArticleCustom> findPageArticle(int page, int limit, ArticleCustom articleCustom) {
 		PageHelper.startPage(page, limit);
-		List<ArticleCustom> lists = articleMapperCustom.findPageArticle(articleCustom);
+		List<ArticleCustom> lists = articleMapper.findPageArticle(articleCustom);
 		return new PageInfo<>(lists);
 	}
 
 	@Override
 	@Cacheable(value = ARTICLES_CACHE_NAME, key = "'Post_status'+#status+#post")
 	public Integer countByStatus(Integer status, String post) {
-		return articleMapperCustom.countByStatus(status, post);
+		return articleMapper.countByStatus(status, post);
 	}
 
 	@Override
 	@CacheEvict(value = ARTICLES_CACHE_NAME, allEntries = true, beforeInvocation = true)
 	public void recycle(int id, Integer integer) throws Exception {
-		articleMapperCustom.updateStatus(id, integer);
+		articleMapper.updateStatus(id, integer);
 	}
 
 	@Override
@@ -117,7 +117,7 @@ public class ArticleServiceImpl implements ArticleService {
 	@Override
 	@Cacheable(value = ARTICLES_CACHE_NAME, key = "'findByArticleId'+#article_id")
 	public ArticleCustom findByArticleId(Integer article_id) {
-		return articleMapperCustom.findByArticleId(article_id);
+		return articleMapper.findByArticleId(article_id);
 	}
 
 	@Override
@@ -159,7 +159,7 @@ public class ArticleServiceImpl implements ArticleService {
 	@Cacheable(value = ARTICLES_CACHE_NAME, key = ARTICLES_CACHE_KEY)
 	public List<ArchiveBo> archives() {
 		// 查询文章表各个时间段的文章数量 分别为DATE->时间段 count->文章数量
-		List<ArchiveBo> listforArchiveBo = articleMapperCustom.findDateAndCount();
+		List<ArchiveBo> listforArchiveBo = articleMapper.findDateAndCount();
 		if (listforArchiveBo != null) {
 			for (ArchiveBo archiveBo : listforArchiveBo) {
 				ArticleExample example = new ArticleExample();
@@ -197,20 +197,20 @@ public class ArticleServiceImpl implements ArticleService {
 	@Override
 	@Cacheable(value = ARTICLES_CACHE_NAME, key = "'articleUrlInt'+#articleUrl")
 	public int findRepeatByUrl(String articleUrl) {
-		return articleMapperCustom.findRepeatByUrl(articleUrl);
+		return articleMapper.findRepeatByUrl(articleUrl);
 	}
 
 	@Override
 	@Cacheable(value = ARTICLES_CACHE_NAME, key = "'articleUrl'+#articleUrl")
 	public ArticleCustom findByArticleUrl(String articleUrl) {
-		return articleMapperCustom.findByArticleUrl(articleUrl);
+		return articleMapper.findByArticleUrl(articleUrl);
 	}
 
 	@Override
 	@Cacheable(value = ARTICLES_CACHE_NAME, key = "'findArtileByCategory'+#page+#limit+#category.categoryUrl")
 	public PageInfo<ArticleCustom> findArtileByCategory(int page, int limit, Category category, int status) {
 		PageHelper.startPage(page, limit);
-		List<ArticleCustom> list = articleMapperCustom.findArtileByCategory(category,status);
+		List<ArticleCustom> list = articleMapper.findArtileByCategory(category,status);
 		return new PageInfo<>(list);
 	}
 
@@ -218,7 +218,7 @@ public class ArticleServiceImpl implements ArticleService {
 	@Cacheable(value = ARTICLES_CACHE_NAME, key = "'findArtileByTag'+#page+#limit+#status")
 	public PageInfo<ArticleCustom> findArtileByTag(Integer page, Integer limit, Tag tag, int status) {
 		PageHelper.startPage(page, limit);
-		List<ArticleCustom> list = articleMapperCustom.findArtileByTag(tag,status);
+		List<ArticleCustom> list = articleMapper.findArtileByTag(tag,status);
 		return new PageInfo<>(list);
 	}
 

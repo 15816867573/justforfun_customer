@@ -54,7 +54,7 @@ public class AttachmentServiceImpl implements AttachmentService {
 	@Override
 	@Cacheable(value = ATTACHMENTS_CACHE_NAME, key = "'countAttachment'")
 	public List<Attachment> countAttachment() {
-		return attachmentMapper.selectByExample(null);
+		return attachmentMapper.selectByExample(new AttachmentExample());
 	}
 
 }

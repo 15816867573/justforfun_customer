@@ -8,28 +8,39 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+
 @FeignClient(name = "provider")
 public interface AttachmentMapper {
-	@RequestMapping(value ="/attachment/countByExample")
-	long countByExample(AttachmentExample example);
-	@RequestMapping(value ="/attachment/deleteByExample")
-	int deleteByExample(AttachmentExample example);
-	@RequestMapping(value ="/attachment/deleteByPrimaryKey")
-	int deleteByPrimaryKey(@RequestParam("id") Integer id);
-	@RequestMapping(value ="/attachment/insert")
-	int insert(Attachment record);
-	@RequestMapping(value ="/attachment/insertSelective")
-	int insertSelective(Attachment record);
-	@RequestMapping(value ="/attachment/selectByExample")
-	List<Attachment> selectByExample(AttachmentExample example);
-	@RequestMapping(value ="/attachment/selectByPrimaryKey")
-	Attachment selectByPrimaryKey(Integer id);
-	@RequestMapping(value ="/attachment/updateByExampleSelective")
-	int updateByExampleSelective(@RequestBody Attachment record, @RequestParam("orderByClause") AttachmentExample example);
-	@RequestMapping(value ="/attachment/updateByExample")
-	int updateByExample(@RequestBody Attachment record,@RequestParam("orderByClause") AttachmentExample example);
-	@RequestMapping(value ="/attachment/updateByPrimaryKeySelective")
-	int updateByPrimaryKeySelective(Attachment record);
-	@RequestMapping(value ="/attachment/updateByPrimaryKey")
-	int updateByPrimaryKey(Attachment record);
+    @RequestMapping(value = "/attachment/countByExample")
+    long countByExample(@RequestBody(required = false) AttachmentExample example);
+
+    @RequestMapping(value = "/attachment/deleteByExample")
+    int deleteByExample(@RequestBody(required = false) AttachmentExample example);
+
+    @RequestMapping(value = "/attachment/deleteByPrimaryKey")
+    int deleteByPrimaryKey(@RequestParam(value = "id", required = false) Integer id);
+
+    @RequestMapping(value = "/attachment/insert")
+    int insert(@RequestBody(required = false) Attachment record);
+
+    @RequestMapping(value = "/attachment/insertSelective")
+    int insertSelective(@RequestBody(required = false) Attachment record);
+
+    @RequestMapping(value = "/attachment/selectByExample")
+    List<Attachment> selectByExample(@RequestBody(required = false) AttachmentExample example);
+
+    @RequestMapping(value = "/attachment/selectByPrimaryKey")
+    Attachment selectByPrimaryKey(@RequestParam(value = "id", required = false) Integer id);
+
+    @RequestMapping(value = "/attachment/updateByExampleSelective")
+    int updateByExampleSelective(@RequestBody(required = false) Attachment record, @RequestParam(value = "orderByClause", required = false) AttachmentExample example);
+
+    @RequestMapping(value = "/attachment/updateByExample")
+    int updateByExample(@RequestBody(required = false) Attachment record, @RequestParam(value = "orderByClause", required = false) AttachmentExample example);
+
+    @RequestMapping(value = "/attachment/updateByPrimaryKeySelective")
+    int updateByPrimaryKeySelective(@RequestBody(required = false) Attachment record);
+
+    @RequestMapping(value = "/attachment/updateByPrimaryKey")
+    int updateByPrimaryKey(@RequestBody(required = false) Attachment record);
 }

@@ -82,14 +82,14 @@ public class AdminController extends BaseController {
 	@RequestMapping(value = "/login")
 	public String login(HttpSession session, ModelMap model) {
 		User user = (User) session.getAttribute(MaydayConst.USER_SESSION_KEY);
-		/*if (user != null) {
+		if (user != null) {
 			return "redirect:/admin";
-		}*/
+		}
 		Map maps=new HashMap();
 		List<Options> listMap = optionsService.selectMap();
 		if (listMap.size() > 0 && !listMap.isEmpty()) {
 			for (Options options : listMap) {
-			//	MaydayConst.OPTIONS.put(options.getOptionName(), options.getOptionValue());
+				MaydayConst.OPTIONS.put(options.getOptionName(), options.getOptionValue());
 				maps.put(options.getOptionName(), options.getOptionValue());
 			}
 		}

@@ -27,12 +27,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	 */
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-	/*	registry.addInterceptor(loginAuthenticator).addPathPatterns("/admin/**").excludePathPatterns("/admin/login")
+		registry.addInterceptor(loginAuthenticator).addPathPatterns("/admin/**").excludePathPatterns("/admin/login")
 				.excludePathPatterns("/admin/getLogin");
 		registry.addInterceptor(indexInterceptor);
 		registry.addInterceptor(installInterceptor).addPathPatterns("/**").excludePathPatterns("/install")
 				.excludePathPatterns("/install/execute").excludePathPatterns("/js/**").excludePathPatterns("/css/**")
-				.excludePathPatterns("/img/**").excludePathPatterns("/plugins/**");*/
+				.excludePathPatterns("/img/**").excludePathPatterns("/plugins/**");
 	}
 
 	/**

@@ -21,8 +21,6 @@ import java.util.List;
 public class ThemeServiceImpl implements ThemeService {
 	@Autowired
 	private ThemeMapper themeMapper;
-	@Autowired
-	private ThemeMapperCustom themeMapperCustom;
 	@Override
 	public PageInfo<Theme> findPageTheme(int page, int limit) {
 		PageHelper.startPage(page, limit);
@@ -63,10 +61,10 @@ public class ThemeServiceImpl implements ThemeService {
 		List<Theme> list=themeMapper.selectByExample(themeExample);
 		//把已设置的主题状态改为未启用
 		if(list.size()>0){
-			themeMapperCustom.updateStatus(ThemeStatus.THEME_NOT_ENABLED.getValue(),list.get(0).getId());
+			themeMapper.updateStatus(ThemeStatus.THEME_NOT_ENABLED.getValue(),list.get(0).getId());
 		}
 		//修改当前主题为启用
-		themeMapperCustom.updateStatus(ThemeStatus.THEME_ENABLED.getValue(),id);
+		themeMapper.updateStatus(ThemeStatus.THEME_ENABLED.getValue(),id);
 	}
 
 	@Override

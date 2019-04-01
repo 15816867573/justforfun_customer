@@ -2,6 +2,7 @@ package com.zhangq.mayday.service.impl;
 
 import com.zhangq.mayday.mapper.generator.LinkMapper;
 import com.zhangq.mayday.model.domain.Link;
+import com.zhangq.mayday.model.domain.LinkExample;
 import com.zhangq.mayday.service.LinksService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -25,7 +26,7 @@ public class LinksServiceImpl implements LinksService {
 	@Override
 	@Cacheable(value = LINKS_CACHE_NAME, key = LINKS_CACHE_KEY)
 	public List<Link> findLinks() {
-		return linkMapper.selectByExample(null);
+		return linkMapper.selectByExample(new LinkExample());
 	}
 
 	@Override

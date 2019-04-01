@@ -8,28 +8,39 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+
 @FeignClient(name = "provider")
 public interface LogMapper {
-	@RequestMapping(value = "/log/countByExample")
-	long countByExample(LogExample example);
-	@RequestMapping(value = "/log/deleteByExample")
-	int deleteByExample(LogExample example);
-	@RequestMapping(value = "/log/deleteByPrimaryKey")
-	int deleteByPrimaryKey(@RequestParam("logId") Integer logId);
-	@RequestMapping(value = "/log/insert")
-	int insert(Log record);
-	@RequestMapping(value = "/log/insertSelective")
-	int insertSelective(Log record);
-	@RequestMapping(value = "/log/selectByExample")
-	List<Log> selectByExample(LogExample example);
-	@RequestMapping(value = "/log")
-	Log selectByPrimaryKey(@RequestParam("logId")Integer logId);
-	@RequestMapping(value = "/log/updateByExampleSelective")
-	int updateByExampleSelective(@RequestBody Log record, @RequestParam("orderByClause") LogExample example);
-	@RequestMapping(value = "/log/updateByExample")
-	int updateByExample(@RequestBody Log record, @RequestParam("orderByClause") LogExample example);
-	@RequestMapping(value = "/log/updateByPrimaryKeySelective")
-	int updateByPrimaryKeySelective(Log record);
-	@RequestMapping(value = "/log/updateByPrimaryKey")
-	int updateByPrimaryKey(Log record);
+    @RequestMapping(value = "/log/countByExample")
+    long countByExample(@RequestBody(required = false) LogExample example);
+
+    @RequestMapping(value = "/log/deleteByExample")
+    int deleteByExample(@RequestBody(required = false) LogExample example);
+
+    @RequestMapping(value = "/log/deleteByPrimaryKey")
+    int deleteByPrimaryKey(@RequestParam(value = "logId", required = false) Integer logId);
+
+    @RequestMapping(value = "/log/insert")
+    int insert(@RequestBody(required = false) Log record);
+
+    @RequestMapping(value = "/log/insertSelective")
+    int insertSelective(@RequestBody(required = false) Log record);
+
+    @RequestMapping(value = "/log/selectByExample")
+    List<Log> selectByExample(@RequestBody(required = false) LogExample example);
+
+    @RequestMapping(value = "/log")
+    Log selectByPrimaryKey(@RequestParam(value = "logId", required = false) Integer logId);
+
+    @RequestMapping(value = "/log/updateByExampleSelective")
+    int updateByExampleSelective(@RequestBody(required = false) Log record, @RequestParam(value = "orderByClause", required = false) LogExample example);
+
+    @RequestMapping(value = "/log/updateByExample")
+    int updateByExample(@RequestBody(required = false) Log record, @RequestParam(value = "orderByClause", required = false) LogExample example);
+
+    @RequestMapping(value = "/log/updateByPrimaryKeySelective")
+    int updateByPrimaryKeySelective(@RequestBody(required = false) Log record);
+
+    @RequestMapping(value = "/log/updateByPrimaryKey")
+    int updateByPrimaryKey(@RequestBody(required = false) Log record);
 }
